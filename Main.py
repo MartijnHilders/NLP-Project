@@ -23,10 +23,13 @@ def main():
     # save the original text for convenience
     # df_train['comment_text'].to_csv('Data/OriginalText.csv')
 
-    text = df_train['comment_text'].apply(cleanText)
-
     # save the cleaned text for convenience
-    text.to_csv('Data/cleanedText.csv')
+    # df_train['comment_text'].apply(cleanText).to_csv('Data/cleanedText.csv')
+
+    df_train['comment_text'] = df_train['comment_text'].apply(cleanText)
+    print(df_train)
+
+
 
     return 0
 
@@ -41,19 +44,26 @@ def cleanText(text, stem_words=True):
     stopw.extend(',')
 
     # remove not not from the stopwords while this can negate an insult
+    # decided to add you while in toxic conversations you is used to enhance te meaning ....
+    #TODO: change
     stopw.remove('not')
+    stopw.remove('you')
+    stopw.remove('your')
+    stopw.remove('you\'re')
+
+    #make the whole text lowercase so we don't make differences between capitalization
+    text = text.lower()
 
     #subbing words to match cleaner words.
     text = re.sub("\'s", " ", text)
     text = re.sub(" whats ", " what is ", text, flags=re.IGNORECASE)
+    text = re.sub("\'n't ", " not ", text, flags=re.IGNORECASE)
     text = re.sub(" n't ", " not ", text, flags=re.IGNORECASE)
     text = re.sub("I'm", "I am", text)
     text = re.sub("shouldn\'t", " should not ", text, flags=re.IGNORECASE)
+    text = re.sub("were\'nt", " were not ", text, flags=re.IGNORECASE)
     text = re.sub("can't", " can not ", text, flags=re.IGNORECASE)
     text = re.sub("\'ve", " have ", text)
-
-    #make the whole text lowercase so we don't make differences between capitalization
-    text = text.lower()
 
     #remove all the stopwords
     stopword = word_tokenize(text)
@@ -71,6 +81,15 @@ def cleanText(text, stem_words=True):
     cleaned_text = text
 
     return cleaned_text
+
+def trainingAlgorithm():
+
+
+    #TODO: get the cleaned training data through the algorithm  trainign it with the accompanied labels
+
+
+    return 0
+
 
 if __name__ == "__main__":
         main()
