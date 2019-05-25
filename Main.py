@@ -11,7 +11,8 @@ import math
 from sklearn.ensemble import RandomForestClassifier
 from gensim.models import Word2Vec
 from nltk.tokenize import word_tokenize
-
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
 
 
 def main():
@@ -33,7 +34,7 @@ def main():
 ######################################################################################################################
 
     # test on smallportion
-    df_train = df_train.sample(n=10000, random_state=33)
+    df_train = df_train.sample(n=25000, random_state=33)
 
     # setting up the X training comments (vectorize them to be able to be used as input for model) and Y training labels
     print("setting up training data ")
@@ -44,31 +45,74 @@ def main():
     # importing the test data set to test the algorithm
     df_test = pd.read_csv('Data/test.csv')
 
-    # setting up de X test comments to test the algorithm
-    df_test = df_test.sample(n=10000, random_state=33)
-    Xtest = word2Vec(df_test)
 
     #run the algorithm for the first time and get an idea of the accuracy with the basic parameters.
     print("started training the model")
     rf_model = RandomForestClassifier()
-    rf_model.fit(Xtrain, Ytrain)
 
+    # for the whole dataset
+    # rf_model.fit(Xtrain, Ytrain)
+
+    # TODO: check for bugs because the accuracy is also high when testsize is 0.99!
     # test the accuracy of the model on a split training dataset
-    #TODO: this..
+    xtrain,xtest,ytrain,ytest = train_test_split(Xtrain,Ytrain,test_size=0.40, random_state=33)
+
+    rf_model.fit(xtrain, ytrain)
+    print("RF Accuracy: %0.2f%%" % (100 * rf_model.score(xtest, ytest)))
 
 
+
+
+
+    #TODO: fix the bugs that says inputs are incorrect.
+
+    # # testing score
+    # score = metrics.f1_score(ytest, rf_model.predict(ytest), pos_label=list(set(ytest)))
+    # print(score)
+    #
+    # # training score
+    # score_train = metrics.f1_score(ytrain, rf_model.predict(ytrain), pos_label=list(set(ytrain)))
+    # print(score_train)
+
+
+    # #classification report
+    # ytrain['label'] = 'train'
+    # ytest['label'] = 'score'
+    #
+    # concat_df = pd.concat([ytrain,ytest])
+    # features_df = pd.get_dummies(concat_df, columns=['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate'])
+    #
+    # train_df = features_df[features_df['label'] == 'train']
+    # score_df = features_df[features_df['label'] == 'score']
+    #
+    # train_df = train_df.drop('label', axis=1)
+    # score_df = score_df.drop('label', axis=1)
+    # print(classification_report(y_true=train_df[:2000],y_pred=rf_model.predict(score_df[:2000])))
+
+################################################################################################################
+
+    #try to find the best parameters for our model to maximize accuracy
+
+
+
+
+
+
+
+################################################################################################################
+    # setting up de X test comments to test the algorithm
+    df_test = df_test.sample(n=25000, random_state=33)
+    Xtest = word2Vec(df_test)
 
     #evaluates the random forest model by saving its predicitons to a .csv file
     randomForestEvaluator(rf_model, df_train, Xtest)
 
-################################################################################################################
 
 
 
 
 
-    # for faster testing we only take a part of the training set and testing it in a normal randomForest classifier
-    # df_train = df_train.sample(n=25000, random_state=33)
+
 
 
 
