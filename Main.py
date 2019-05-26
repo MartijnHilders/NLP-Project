@@ -12,7 +12,9 @@ from sklearn.ensemble import RandomForestClassifier
 from gensim.models import Word2Vec
 from nltk.tokenize import word_tokenize
 from sklearn.model_selection import train_test_split
-from sklearn import metrics
+from sklearn.model_selection import cross_val_score
+from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.model_selection import RandomizedSearchCV
 
 
 def main():
@@ -33,7 +35,7 @@ def main():
 
 ######################################################################################################################
 
-    # test on smallportion
+    # test on small portion
     df_train = df_train.sample(n=25000, random_state=33)
 
     # setting up the X training comments (vectorize them to be able to be used as input for model) and Y training labels
@@ -53,70 +55,121 @@ def main():
     # for the whole dataset
     # rf_model.fit(Xtrain, Ytrain)
 
-    # TODO: check for bugs because the accuracy is also high when testsize is 0.99!
     # test the accuracy of the model on a split training dataset
-    xtrain,xtest,ytrain,ytest = train_test_split(Xtrain,Ytrain,test_size=0.40, random_state=33)
-
+    xtrain,xtest,ytrain,ytest = train_test_split(Xtrain,Ytrain,test_size=0.40, random_state=42)
     rf_model.fit(xtrain, ytrain)
+
+    #prediction and crossvalidation
+    rf_predict = rf_model.predict(xtest)
+    rfc_cv_score = cross_val_score(rf_model, Xtrain, Ytrain, cv=10, scoring='roc_auc')
+
+    #tests
+    #TODO: explain the results.
+    print("Model Accuracy")
     print("RF Accuracy: %0.2f%%" % (100 * rf_model.score(xtest, ytest)))
 
 
+    print("Confusion Matrix:")
+    print(confusion_matrix(ytest.values.argmax(axis=1), rf_predict.argmax(axis=1)))
+    print('\n')
 
 
+    print("Classification Report")
+    print(classification_report(ytest, rf_predict))
+    print('\n')
 
-    #TODO: fix the bugs that says inputs are incorrect.
 
-    # # testing score
-    # score = metrics.f1_score(ytest, rf_model.predict(ytest), pos_label=list(set(ytest)))
-    # print(score)
+    print("All Cross Validation Scores")
+    print(rfc_cv_score)
+    print('\n')
+
+
+    print("Mean Cross Validation Score")
+    print(rfc_cv_score.mean())
+
+################################################################################################################
     #
-    # # training score
-    # score_train = metrics.f1_score(ytrain, rf_model.predict(ytrain), pos_label=list(set(ytrain)))
-    # print(score_train)
-
-
-    # #classification report
-    # ytrain['label'] = 'train'
-    # ytest['label'] = 'score'
+    # # improve the model by trying to find the best parameters for the random forest, we can do this by using RandomizedSearchedCV
+    # # hyperparameter training, using 4 parameters
+    # # only has to be run once!
+    # # be careful for overfitting
+    # # https://towardsdatascience.com/hyperparameter-tuning-the-random-forest-in-python-using-scikit-learn-28d2aa77dd74
     #
-    # concat_df = pd.concat([ytrain,ytest])
-    # features_df = pd.get_dummies(concat_df, columns=['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate'])
+    # # number of trees in random forest
+    # n_estimators = [int(x) for x in np.linspace(start=200, stop=2000, num=10)]
     #
-    # train_df = features_df[features_df['label'] == 'train']
-    # score_df = features_df[features_df['label'] == 'score']
+    # # number of features at every split
+    # max_features = ['auto', 'sqrt']
     #
-    # train_df = train_df.drop('label', axis=1)
-    # score_df = score_df.drop('label', axis=1)
-    # print(classification_report(y_true=train_df[:2000],y_pred=rf_model.predict(score_df[:2000])))
+    # # max depth
+    # max_depth = [int(x) for x in np.linspace(100, 500, num=11)]
+    # max_depth.append(None)
+    #
+    # # bootstrap
+    # bootstrap = ['true', 'false']
+    #
+    # # create random grid
+    # random_grid = {
+    #     'n_estimators': n_estimators,
+    #     'max_features': max_features,
+    #     'max_depth': max_depth,
+    #     'bootstrap': bootstrap
+    # }
+    #
+    # # Random search of parameters
+    # rfc_random = RandomizedSearchCV(estimator=rf_model, param_distributions=random_grid, n_iter=50, cv=2, verbose=2,
+    #                                 random_state=42, n_jobs=-1)
+    #
+    # # Fit the model
+    # rfc_random.fit(xtrain, ytrain)
+    # # print results
+    # print(rfc_random.best_params_)
+    #
+    # #result = {'n_estimators': 200, 'max_features': 'sqrt', 'max_depth': 140, 'bootstrap': 'true'}
 
 ################################################################################################################
 
-    #try to find the best parameters for our model to maximize accuracy
+    # testing if the retrieved parameters are actually better
+    # parameters from optimization step;
+    # n_estimators = 200 , max_features = 'sqrt' , max_depth = 140 , bootstrap = 'true'
 
+    #initializing the model and fitting it to the training data
+    rf_optimized_model = RandomForestClassifier(n_estimators=200, max_features='sqrt', max_depth=140, bootstrap='true')
+    rf_optimized_model.fit(xtrain,ytrain)
 
+    # prediction and crossvalidation
+    rf_predict_optimized = rf_optimized_model.predict(xtest)
+    rfc_cv_score_optimized = cross_val_score(rf_optimized_model, Xtrain, Ytrain, cv=10, scoring='roc_auc')
 
+    # tests
+    # TODO: explain the results.
+    print("Optimized Model Accuracy")
+    print("RF Accuracy: %0.2f%%" % (100 * rf_optimized_model.score(xtest, ytest)))
 
+    print("Optimized model Confusion Matrix:")
+    print(confusion_matrix(ytest.values.argmax(axis=1), rf_predict_optimized.argmax(axis=1)))
+    print('\n')
 
+    print("Optimized Model Classification Report")
+    print(classification_report(ytest, rf_predict_optimized))
+    print('\n')
+
+    print("Optimized Model All Cross Validation Scores")
+    print(rfc_cv_score_optimized)
+    print('\n')
+
+    print("Optimized Model Mean Cross Validation Score")
+    print(rfc_cv_score_optimized.mean())
 
 
 ################################################################################################################
-    # setting up de X test comments to test the algorithm
-    df_test = df_test.sample(n=25000, random_state=33)
-    Xtest = word2Vec(df_test)
+
+    # # setting up de X test comments to test the algorithm
+    # df_test = df_test.sample(n=25000, random_state=33)
+    # Xtest = word2Vec(df_test)
 
     #evaluates the random forest model by saving its predicitons to a .csv file
-    randomForestEvaluator(rf_model, df_train, Xtest)
-
-
-
-
-
-
-
-
-
-
-
+    # randomForestEvaluator(rf_model, df_train, Xtest)
 
     return 0
 
@@ -175,61 +228,6 @@ def cleanText(text):
     return cleaned_text
 
 
-def trainingAlgorithm(dataset):
-    #TODO: get the cleaned training data through the algorithm  trainign it with the accompanied labels
-    print('Started training')
-
-    #unigram model
-    toxicUnigramCounts = collections.defaultdict(lambda: 0)
-    toxicTotal = 0
-    neutralUnigramCounts = collections.defaultdict(lambda: 0)
-    neutralTotal = 0
-
-    for index, row in dataset.iterrows():
-        #print(row['id'])
-        for word in word_tokenize(row['comment_text']):
-            if row['toxic']==1:
-                toxicUnigramCounts[word] = toxicUnigramCounts[word] + 1
-                toxicTotal += 1
-            if row['toxic']==0:
-                neutralUnigramCounts[word] = neutralUnigramCounts[word] + 1
-                neutralTotal += 1
-
-
-
-
-    return 0
-
-
-def unigramtesting(sentence,toxicTotal,neutralTotal,toxicUnigramCounts,neutralUnigramCounts):
-
-
-    toxic = " False "
-
-    toxicScore = 0.0
-    neutralScore = 0.0
-    for token in sentence:
-        toxicCount = toxicUnigramCounts[token] + 1
-        toxicScore += math.log(toxicCount)
-        toxicScore -= math.log(toxicTotal)
-
-        neutralCount = neutralUnigramCounts[token] + 1
-        toxicScore += math.log(neutralCount)
-        toxicScore -= math.log(neutralTotal)
-
-
-    if toxicScore > neutralScore:
-        toxic = " True "
-        # return 1
-    else:
-        toxic = " False "
-        # return 0
-
-
-
-    print("ToxicScore = " + toxicScore + " Toxic? = " + toxic)
-
-
 #making a predictor for the test data
 def randomForestEvaluator(randomForest, dataset, Xtest):
 
@@ -258,7 +256,6 @@ def averageVecValue(comment, model, vectorSize, vocab):
     return Vector_value.tolist()
 
 
-
 # Vectorizes the data so that i can be used for the random forrest classifier
 def word2Vec(dataSet):
     dataSet['comment_text_tokenized'] = dataSet['comment_text'].apply(word_tokenize)
@@ -271,6 +268,8 @@ def word2Vec(dataSet):
     vectorizedData = []
     for index, row in dataSet.iterrows():
         vectorizedData.append(averageVecValue(row['comment_text'], word2vec, vectorSize, vocab))
+
+    vectorizedData = tuple(vectorizedData)
 
     return vectorizedData
 
