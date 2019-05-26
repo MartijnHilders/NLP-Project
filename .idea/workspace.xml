@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d4bc440a-1ae3-475d-8794-7ec91b9bdc04" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.ipynb_checkpoints/NotebookOfProject-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/.ipynb_checkpoints/NotebookOfProject-checkpoint.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main_Python_Version/Main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NotebookOfProject.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/NotebookOfProject.ipynb" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -15,10 +14,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Main.py">
+        <entry file="file://$PROJECT_DIR$/Main_Python_Version/Main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-875">
-              <caret line="95" column="120" lean-forward="true" selection-start-line="95" selection-start-column="120" selection-end-line="95" selection-end-column="120" />
+            <state>
+              <caret line="16" selection-start-line="16" selection-end-line="16" selection-end-column="54" />
               <folding>
                 <element signature="e#2397#4099#0" />
                 <element signature="e#5648#6047#0" />
@@ -156,11 +155,6 @@
               <item name="NLP-Project" type="b2602c69:ProjectViewProjectNode" />
               <item name="NLP-Project" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="NLP-Project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="NLP-Project" type="462c0819:PsiDirectoryNode" />
-              <item name="Data" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -178,6 +172,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Martijn\Documents\GitHub\NLP-Project\Main_Python_Version" />
       <recent name="C:\Users\Martijn\Documents\GitHub\NLP-Project\Data" />
     </key>
   </component>
@@ -207,7 +202,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Main.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\Martijn\Documents\GitHub\NLP-Project\Main_Python_Version\Main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -237,23 +232,22 @@
       <workItem from="1558606769657" duration="8085000" />
       <workItem from="1558633241571" duration="2410000" />
       <workItem from="1558801612437" duration="14977000" />
-      <workItem from="1558821056698" duration="18242000" />
+      <workItem from="1558821056698" duration="19518000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="45753000" />
+    <option name="totallyTimeSpent" value="47029000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18230563" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18230563" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32952926" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49932975" visible="true" weight="0.4636234" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49932975" weight="0.4636234" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.40941513" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -397,10 +391,10 @@
     <entry file="file://$PROJECT_DIR$/NotebookOfProject.ipynb">
       <provider selected="true" editor-type-id="jupyter-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/Main.py">
+    <entry file="file://$PROJECT_DIR$/Main_Python_Version/Main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-875">
-          <caret line="95" column="120" lean-forward="true" selection-start-line="95" selection-start-column="120" selection-end-line="95" selection-end-column="120" />
+        <state>
+          <caret line="16" selection-start-line="16" selection-end-line="16" selection-end-column="54" />
           <folding>
             <element signature="e#2397#4099#0" />
             <element signature="e#5648#6047#0" />
